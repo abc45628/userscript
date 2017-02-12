@@ -21,6 +21,7 @@ var cards=[
 ];
 var items={"cards":cards,"last_assetid":undefined,"total_inventory_count":undefined};
 var getInvData_progress=false;
+var loadCount=0;//重试加载仓库数据的次数
 
 /**得到仓库数据
 *  start_assetid   每张卡都有一个assetid，就算是2张相同的卡，assetid都会不同*/
@@ -28,18 +29,15 @@ function getInventoryData(start_assetid){
   if(getInvData_progress){ return; }
   var inv_url='https://steamcommunity.com/inventory/'+user64+'/753/6';
   var params = {
-    'l': 'schinese',
-    'count': 25//请求的物品数量
+    l: 'schinese',
+    count: 25//请求的物品数量
   };
   if(start_assetid){
     params.start_assetid=start_assetid;
   }
   getInvData_progress=true;
-  // $J.ajax(inv_url);
   setTimeout(function(){
     $J.get( inv_url, params).done(function(data){
-      console.log("仓库数据");
-      console.log(data);
       var assets=data.assets;
       var descriptions=data.descriptions;
       var desc_used=0;
@@ -47,9 +45,7 @@ function getInventoryData(start_assetid){
         var asset=assets[i];
         var card={};
         card.assetid=asset.assetid;
-        if(asset.classid !== descriptions[desc_used].classid){
-          desc_used++;
-        }
+        for(;asset.classid !== descriptions[desc_used].classid;){desc_used++;}
         card.market_hash_name=descriptions[desc_used].market_hash_name;
         //宝珠没有appid
         var appid=card.market_hash_name.match('[0-9]{6,}');
@@ -60,11 +56,17 @@ function getInventoryData(start_assetid){
       items.total_inventory_count=data.total_inventory_count;
       // console.log("length="+cards.length);
       getInvData_progress=false;
+      loadCount=0;
+      console.log("仓库数据");
+      console.log(data);
+      console.log(cards);
     }).error(function(){
+      loadCount++;
+      getInvData_progress=false;
+      getInventoryData(start_assetid);
       console.log("仓库数据加载出错");
     });
-  },1000);
-
+  },1000*(loadCount+1));
 }
 
 function addUI(){
@@ -80,7 +82,7 @@ function addUI(){
     var evt=ev.target;
     // 点击卡片
     if (evt.className === 'inventory_item_link') {
-      document.querySelector(".item_market_actions").firstChild.firstChild.firstChild.target="_blank";
+
       console.log("hash"+evt.hash);
       clickCard(evt.hash);
     }
@@ -98,6 +100,7 @@ function addUI(){
 
 // 点击卡片
 function clickCard(url){
+
   document.querySelector("#sce_page .item_market_action_button_contents").textContent="steamcardexchange页面";
   var asset=url.split('_');
   //卡片、宝珠、表情、背景的context_id=6，礼物context_id=1
@@ -105,9 +108,11 @@ function clickCard(url){
   for(var i=0;i<cards.length;i++){
     var _card=cards[i];
     if(asset[2] == _card.assetid){
+      if(_card.market_hash_name == "753-Gems"){return;}
+      document.querySelector(".item_market_actions").firstChild.firstChild.firstChild.target="_blank";
       //steamcardexchange页面
       document.querySelector("#sce_page").href="http://www.steamcardexchange.net/index.php?gamepage-appid-"+_card.appid;
-      document.querySelector("#sce_page .item_market_action_button_contents").textContent="steamcardexchange页面"+url;
+      document.querySelector("#sce_page .item_market_action_button_contents").textContent=_card.market_hash_name;
     }
   }
 }

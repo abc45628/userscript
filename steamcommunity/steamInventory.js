@@ -27,7 +27,7 @@ var loadCount=0;//重试加载仓库数据的次数
 *  start_assetid   每张卡都有一个assetid，就算是2张相同的卡，assetid都会不同*/
 function getInventoryData(start_assetid){
   if(getInvData_progress){ return; }
-  var inv_url='https://steamcommunity.com/inventory/'+user64+'/753/6';
+  var inv_url='//steamcommunity.com/inventory/'+user64+'/753/6';
   var params = {
     l: 'schinese',
     count: 25//请求的物品数量

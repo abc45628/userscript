@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        steam仓库
 // @namespace   https://git.oschina.net/abc45628/userscript
-// @version     2017.4.19
+// @version     2017.4.22
 // @author      abc45628
 // @description steam仓库
 // @up
@@ -86,6 +86,7 @@
 	}
 
 	function build_UI() {
+		//steamcardexchange
 		let card_exchange_btn = document.createElement("div");
 		card_exchange_btn.innerHTML =
 			"<a id='sce_page' target='_blank' class='item_market_action_button item_market_action_button_green'>" +
@@ -94,14 +95,20 @@
 			"<span class='item_market_action_button_edge item_market_action_button_right'></span>" +
 			"<span class='item_market_action_button_preload'></span></a>";
 		document.querySelector('.inventory_page_right').appendChild(card_exchange_btn);
-
+		//价位表
 		let price_list = document.createElement("div");
+		price_list.id = 'price_list';
+		price_list.style.marginTop = "46px";
 		price_list.innerHTML =
-			'<div id="market_commodity_forsale"></div>' +
-			'<div id="market_commodity_forsale_table"></div>' +
-			'<div id="market_commodity_buyrequests"></div>' +
-			'<div id="market_commodity_buyreqeusts_table"></div>';
-		document.querySelector('#inventory_pagecontrols').appendChild(price_list);
+			'<div style="float:left"><div id="market_commodity_forsale"></div>' +
+			'<div id="market_commodity_forsale_table"></div></div>' +
+			'<div style="float:left;margin-left: 30px;"><div id="market_commodity_buyrequests"></div>' +
+			'<div id="market_commodity_buyreqeusts_table"></div></div>';
+		document.querySelector('#inventory_pagecontrols').after(price_list);
+		//有价值的物品
+		let rich_item = document.createElement('div');
+		rich_item.id = 'rich_item';
+		document.getElementById("price_list").after(rich_item);
 
 		document.addEventListener('click', function (ev) {
 			let evt = ev.target;
@@ -116,6 +123,7 @@
 		});
 	}
 
+	/**点击下一页 */
 	function click_next() {
 		let cur_page = document.querySelector('#pagecontrol_cur').textContent;
 		console.log("cur_page " + cur_page);
@@ -125,6 +133,7 @@
 		}
 	}
 
+	/**点击卡片 */
 	function click_card(url) {
 		console.log('url ' + url);
 		document.querySelector("#sce_page .item_market_action_button_contents").textContent = "steamcardexchange页面";
@@ -171,9 +180,12 @@
 		get_market_price(desc.market_hash_name);
 	}
 
+	/**查市场价格 */
 	function get_market_price(market_hash_name) {
 		$J.get('//steamcommunity.com/market/listings/753/' + market_hash_name, function (data) {
 			let item_nameid = data.match(/Market_LoadOrderSpread\( (\d+)/)[1];
+
+			//查单张卡牌的最近市场价
 			$J.ajax({
 				type: "GET",
 				url: "//steamcommunity.com/market/itemordershistogram",
@@ -191,79 +203,6 @@
 						$J('#market_commodity_forsale_table').html(data.sell_order_table);
 						$J('#market_commodity_buyrequests').html(data.buy_order_summary);
 						$J('#market_commodity_buyreqeusts_table').html(data.buy_order_table);
-
-						// set in the purchase dialog the default price to buy things (which should almost always be the price of the cheapest listed item)
-						if (data.lowest_sell_order && data.lowest_sell_order > 0)
-							CreateBuyOrderDialog.m_nBestBuyPrice = data.lowest_sell_order;
-						else if (data.highest_buy_order && data.highest_buy_order > 0)
-							CreateBuyOrderDialog.m_nBestBuyPrice = data.highest_buy_order;
-
-						// update the jplot graph
-						// we do this infrequently, since it's really expensive, and makes the page feel sluggish
-						var $elOrdersHistogram = $J('#orders_histogram');
-						if (Market_OrderSpreadPlotLastRefresh
-							&& Market_OrderSpreadPlotLastRefresh + (60 * 60 * 1000) < $J.now()
-							&& $elOrdersHistogram.length) {
-							$elOrdersHistogram.html('');
-							Market_OrderSpreadPlot = null;
-						}
-
-						if (Market_OrderSpreadPlot == null && $elOrdersHistogram.length) {
-							Market_OrderSpreadPlotLastRefresh = $J.now();
-
-							$elOrdersHistogram.show();
-							var line1 = data.sell_order_graph;
-							var line2 = data.buy_order_graph;
-							var numYAxisTicks = 11;
-							var strFormatPrefix = data.price_prefix;
-							var strFormatSuffix = data.price_suffix;
-							var lines = [line1, line2];
-
-							Market_OrderSpreadPlot = $J.jqplot('orders_histogram', lines, {
-								renderer: $J.jqplot.BarRenderer,
-								rendererOptions: { fillToZero: true },
-								title: { text: '订购单和销售单（累积）', textAlign: 'left' },
-								gridPadding: { left: 45, right: 45, top: 45 },
-								axesDefaults: { showTickMarks: false },
-								axes: {
-									xaxis: {
-										tickOptions: { formatString: strFormatPrefix + '%0.2f' + strFormatSuffix, labelPosition: 'start', showMark: false },
-										min: data.graph_min_x,
-										max: data.graph_max_x
-									},
-									yaxis: {
-										pad: 1,
-										tickOptions: { formatString: '%d' },
-										numberTicks: numYAxisTicks,
-										min: 0,
-										max: data.graph_max_y
-									}
-								},
-								grid: {
-									gridLineColor: '#1b2939',
-									borderColor: '#1b2939',
-									background: '#101822'
-								},
-								cursor: {
-									show: true,
-									zoom: true,
-									showTooltip: false
-								},
-								highlighter: {
-									show: true,
-									lineWidthAdjust: 2.5,
-									sizeAdjust: 5,
-									showTooltip: true,
-									tooltipLocation: 'n',
-									tooltipOffset: 20,
-									fadeTooltip: true,
-									yvalues: 2,
-									formatString: "<span style=\"display: none\">%s%s</span>%s"
-								},
-								series: [{ lineWidth: 3, fill: true, fillAndStroke: true, fillAlpha: 0.3, markerOptions: { show: false, style: 'circle' } }, { lineWidth: 3, fill: true, fillAndStroke: true, fillAlpha: 0.3, color: '#6b8fc3', markerOptions: { show: false, style: 'circle' } }],
-								seriesColors: ["#688F3E"]
-							});
-						}
 					}
 				},
 				error: function () {
@@ -272,8 +211,58 @@
 					getInvData_progress = false;
 					getInventoryData(start_assetid);
 				}
-
 			});
+		});
+		//查本游戏最贵的物品
+		let card = { price: 0 };
+		let flash_card = { price: 0 };
+		let booster_pack = { price: 0 };
+		let emoticon = { price: 0 };
+		let background = { price: 0 };
+		$J.ajax({
+			type: "GET",
+			url: "//steamcommunity.com/market/search/render/",
+			data: {
+				appid: 753,
+				count: 100,
+				'category_753_Game[]': 'tag_app_' + market_hash_name.match(/^\d*/)[0]
+			},
+			success: function (data) {
+				let parser = new DOMParser();
+				let html = parser.parseFromString(data.results_html, 'text/html');
+				let one_item = html.getElementsByClassName('market_listing_row');
+				for (let i = 0; i < one_item.length; i++) {
+					let sale_price = one_item[i].getElementsByClassName('sale_price')[0];
+					//出价
+					let item_price = sale_price.previousElementSibling.textContent.match(/\d+\.\d+/)[0];
+					console.log(item_price);
+					//名字
+					let market_listing_item_name = one_item[i].getElementsByClassName("market_listing_item_name")[0];
+					let item_name = market_listing_item_name.textContent;
+					console.log(item_name);
+					//类型
+					let market_listing_game_name = one_item[i].getElementsByClassName('market_listing_game_name')[0];
+					let item_class = market_listing_game_name.textContent;
+					console.log(item_class);
+					if (item_class.includes('闪亮') && item_price > flash_card.price) {//闪卡
+						flash_card.price = item_price;
+						flash_card.name = item_name;
+					} else if (item_class.includes('卡牌') && item_price > card.price) {//卡牌
+						card.price = item_price;
+						card.name = item_name;
+					} else if (item_class.includes('表情') && item_price > emoticon.price) {//表情
+						emoticon.price = item_price;
+						emoticon.name = item_name;
+					} else if (item_class.includes('背景') && item_price > background.price) {//背景
+						background.price = item_price;
+						background.name = item_name;
+					} else if (item_class.includes('补充包') && item_price > booster_pack.price) {//补充包
+						booster_pack.price = item_price;
+						booster_pack.name = item_name;
+					}
+				}
+
+			}
 		});
 	}
 

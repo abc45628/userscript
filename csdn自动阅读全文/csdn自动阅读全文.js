@@ -4,7 +4,7 @@
 // @version      0.1
 // @description  try to take over the world!
 // @author       You
-// @match        http://blog.csdn.net/*/article/details/*
+// @match        http*/://blog.csdn.net/*/article/details/*
 // @grant        none
 // ==/UserScript==
 

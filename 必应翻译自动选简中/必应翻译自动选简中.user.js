@@ -44,7 +44,6 @@ function sel_right_text(text) {
 }
 
 function 重新翻译() { 
-  
   var TranslatorWebTelemetry;
   (function (n) {
     var i = function () {

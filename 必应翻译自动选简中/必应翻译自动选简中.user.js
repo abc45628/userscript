@@ -181,10 +181,4 @@ function 重新翻译() {
     n.activateButtonByKey = e
   })(AccessibilityHelpers || (AccessibilityHelpers = {}));
   BM.trigger();
-  sj_evt.bind("ajax.feedback.initialized", function (args) {
-    args[1].debugCollector.setContextValue("FederationDebugInfo", "QueryID : 861146c0b2ba4b0eab5c39bade69e5c1");
-  });;
-
-  var fbpkgiid = fbpkgiid || {};
-  fbpkgiid.page = 'translator.5063';;
 }

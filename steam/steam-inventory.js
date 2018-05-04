@@ -4,7 +4,6 @@
 // @version     2017.4.22
 // @author      abc45628
 // @description steam仓库
-// @up
 // @supportURL  https://git.oschina.net/abc45628/userscript/issues
 // @include     /^https?:\/\/steamcommunity\.com\/.*\/inventory/
 // @license     MIT

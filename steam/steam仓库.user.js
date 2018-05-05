@@ -1,14 +1,14 @@
 // ==UserScript==
-// @name        steam仓库
-// @namespace   https://git.oschina.net/abc45628/userscript
-// @version     2017.5.4
-// @author      abc45628
-// @description steam仓库
-// @supportURL  https://git.oschina.net/abc45628/userscript/issues
+// @name				steam仓库
+// @namespace		https://git.oschina.net/abc45628/userscript
+// @version			2017.5.5
+// @author			abc45628
+// @description	steam仓库
+// @supportURL	https://git.oschina.net/abc45628/userscript/issues
 // @updateURL		https://gitee.com/abc45628/userscript/raw/master/steam/steam仓库.user.js
-// @include     /^https?:\/\/steamcommunity\.com\/.*\/inventory/
-// @license     MIT
-// @run-at      document-end
+// @include			/^https?:\/\/steamcommunity\.com\/.*\/inventory/
+// @license			MIT
+// @run-at			document-end
 // ==/UserScript==
 (function () {
 	"use strict";

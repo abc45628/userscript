@@ -3,8 +3,8 @@
 // @namespace    http://tampermonkey.net/
 // @version      0.1
 // @description  try to take over the world!
-// @author       You
-// @match        http*/://blog.csdn.net/*/article/details/*
+// @updateURL    https://gitee.com/abc45628/userscript/raw/master/csdn自动阅读全文/csdn自动阅读全文.user.js
+// @match        http*://blog.csdn.net/*/article/details/*
 // @grant        none
 // ==/UserScript==
 

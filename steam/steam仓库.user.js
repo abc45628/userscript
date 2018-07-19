@@ -97,23 +97,19 @@
 				getInvData_progress = false;
 			},
 			error: function () {
+				loadWait++;
 				console.error("仓库数据加载出错,请求参数为:");
 				console.error(data);
-				console.error("等待下一次请求。");
-				loadWait++;
+				console.error("等待下一次请求。" + loadWait + '秒后。');
 				getInvData_progress = false;
 				setTimeout(getInvData, 1000 * loadWait);
 			}
 		});
 	}
 
-
-
-
-
 	/**点击卡片 */
 	function click_card(url) {
-		// console.log('url ' + url);
+		// console.log('url=' + url);
 		$J("#sce_page .item_market_action_button_contents").text("steamcardexchange页面");
 		//礼物context_id=1,优惠券context_id=3,卡片、宝珠、表情、背景的context_id=6
 		//753库存页面的调用id
@@ -143,7 +139,7 @@
 		if (!choosen) {
 			console.error('点击卡片后找不到资产数据');
 		}
-		console.log('选中了');
+		console.log('选中资产数据');
 		console.log(choosen);
 
 		//steamcardexchange页面
@@ -151,7 +147,7 @@
 		document.querySelector("#sce_page .item_market_action_button_contents").textContent = choosen.market_hash_name;
 
 		//查市场价格
-		get_market_price(choosen);
+		open_market_page(choosen);
 	}
 
 	/**打开市场页面 */

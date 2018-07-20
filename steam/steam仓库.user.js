@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        steam仓库
 // @namespace   https://git.oschina.net/abc45628/userscript
-// @version     2017.5.5.1
+// @version     2017.7.20.1
 // @author      abc45628
 // @description steam仓库
 // @supportURL  https://git.oschina.net/abc45628/userscript/issues
@@ -77,14 +77,19 @@
 				start_assetid = last_assetid;
 
 
-				for (let i = 0; i < descriptions.length; i++) {
-					const d = descriptions[i];
+				for (let i = 0; i < assets.length; i++) {
 					const a = assets[i];
-					let at = new asset();
-					at.market_hash_name = d.market_hash_name;
-					at.assetid = a.assetid;
-					at.appid = d.market_fee_app;
-					asset_list.push(at);
+					for (let j = 0; j < descriptions.length; j++) {
+						const d = descriptions[j];
+						if (a.classid === d.classid) {
+							let at = new asset();
+							at.market_hash_name = d.market_hash_name;
+							at.assetid = a.assetid;
+							at.appid = d.market_fee_app;
+							asset_list.push(at);
+							break;
+						}
+					}
 				}
 				console.log('现有的资产：');
 				console.log(asset_list);
@@ -111,6 +116,10 @@
 	function click_card(url) {
 		// console.log('url=' + url);
 		$J("#sce_page .item_market_action_button_contents").text("steamcardexchange页面");
+		$J('#market_commodity_forsale').html('');
+		$J('#market_commodity_forsale_table').html('');
+		$J('#market_commodity_buyrequests').html('');
+		$J('#market_commodity_buyreqeusts_table').html('');
 		//礼物context_id=1,优惠券context_id=3,卡片、宝珠、表情、背景的context_id=6
 		//753库存页面的调用id
 		let clicked_asset_id = url.match(/^#753_6_(.*)$/)[1];
@@ -198,7 +207,7 @@
 		console.log("cur_page=" + cur_page);
 		/**剩余n页的时候再查后面的卡片 */
 		let n = 2;
-		if (assets.length - cur_page * 25 <= 25 * n) {
+		if (asset_list.length - cur_page * 25 <= 25 * n) {
 			getInvData();
 		}
 	}

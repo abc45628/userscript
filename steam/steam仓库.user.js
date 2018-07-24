@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        steam仓库
 // @namespace   https://git.oschina.net/abc45628/userscript
-// @version     2017.7.20.1
+// @version     2017.7.24.1
 // @author      abc45628
 // @description steam仓库
 // @supportURL  https://git.oschina.net/abc45628/userscript/issues

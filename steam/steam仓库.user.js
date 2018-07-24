@@ -165,7 +165,7 @@
 		if (choosen.item_nameid) {
 			get_market_price(choosen.item_nameid);
 		} else {
-			$J.get('//steamcommunity.com/market/listings/753/' + market_hash_name, function (data) {
+			$J.get('//steamcommunity.com/market/listings/753/' + encodeURIComponent(market_hash_name), function (data) {
 				let item_nameid = data.match(/Market_LoadOrderSpread\( (\d+)/)[1];
 				choosen.item_nameid = item_nameid;
 				get_market_price(choosen.item_nameid);

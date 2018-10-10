@@ -1,10 +1,10 @@
 // ==UserScript==
 // @name        steam仓库
-// @namespace   https://git.oschina.net/abc45628/userscript
+// @namespace   https://gitee.com/abc45628/userscript
 // @version     2018.8.13.0
 // @author      abc45628
 // @description steam仓库
-// @supportURL  https://git.oschina.net/abc45628/userscript/issues
+// @supportURL  https://gitee.com/abc45628/userscript/issues
 // @updateURL   https://gitee.com/abc45628/userscript/raw/master/steam/steam仓库.user.js
 // @include     /^https?:\/\/steamcommunity\.com\/.*\/inventory/
 // @license     MIT

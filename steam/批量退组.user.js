@@ -2,7 +2,7 @@
 // @name        Leave Steam Group
 // @description 可批量退出Steam组，可方便退出封禁的组。
 // @author      abc45628,mouse040429
-// @version     2018.10.16.1
+// @version     2018.10.16.2
 // @namespace   https://gitee.com/abc45628/userscript
 // @supportURL  https://gitee.com/abc45628/userscript/issues
 // @updateURL   https://gitee.com/abc45628/userscript/raw/master/steam/批量退组.user.js
@@ -52,7 +52,7 @@
 				return;
 			}
 			$J(this).attr("data-group-id", group_steamids);
-			const group_name = unescape(group_actions[2]['replace'](/\\u/gi, '%u'));
+			const group_name = unescape(group_actions[2].replace(/\\u/gi, '%u'));
 			const group_id = group_actions[3];
 			group_steamids_array.push(group_steamids);
 			group_name_array.push(group_name);

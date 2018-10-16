@@ -47,7 +47,10 @@
 			//有管理权限的组如果选上会报错
 			const group_actions = $J(this).find(".actions > .linkStandard[onclick]").attr("onclick").match(/^ConfirmLeaveGroup\(\s'(\d{18})',\s"(.*)",\s'(#group_\d+)'\s+\)$/);
 			const group_steamids = group_actions[1];
-			if (whiteList.includes(group_steamids)) { return; }
+			if (whiteList.includes(group_steamids)) {
+				$J(this).removeClass("group-selected");
+				return;
+			}
 			$J(this).attr("data-group-id", group_steamids);
 			const group_name = unescape(group_actions[2]['replace'](/\\u/gi, '%u'));
 			const group_id = group_actions[3];

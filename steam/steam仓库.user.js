@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        steam仓库
 // @namespace   https://gitee.com/abc45628/userscript
-// @version     2018.8.13.0
+// @version     2019.1.19.0
 // @author      abc45628
 // @description steam仓库
 // @supportURL  https://gitee.com/abc45628/userscript/issues
@@ -56,7 +56,7 @@
 		if (no_more_item) { console.log('没有更多卡片'); return; }
 		let data = {
 			l: "schinese",//钱包区域
-			count: 75,//请求的库存数量
+			count: 500,//请求的库存数量
 			start_assetid: start_assetid,
 		};
 		//开始查数据
@@ -100,6 +100,7 @@
 
 
 				getInvData_progress = false;
+				document.querySelector("#sce_page .item_market_action_button_contents").textContent ='数据初始化完成';
 			},
 			error: function () {
 				loadWait++;

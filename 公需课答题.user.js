@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         公需课答题
 // @namespace    http://tampermonkey.net/
-// @version      0.22
+// @version      0.23
 // @description  try to take over the world!
 // @author       You
 // @match        http://ggfw.gdhrss.gov.cn/zxpx/auc/play/player*
@@ -23,6 +23,7 @@
     }
     if (timuTextOld === timuText) {
       console.log("同一题目");
+      play();
       return;
     }
     console.log("题目" + timuText);

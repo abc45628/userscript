@@ -1,14 +1,15 @@
 // ==UserScript==
 // @name         公需课答题
 // @namespace    http://tampermonkey.net/
-// @version      0.21
+// @version      0.22
 // @description  try to take over the world!
 // @author       You
 // @match        http://ggfw.gdhrss.gov.cn/zxpx/auc/play/player*
 // @updateURL    https://gitee.com/abc45628/userscript/raw/master/公需课答题.user.js
 // @grant        none
 // ==/UserScript==
-
+//http://127.0.0.1:8080/gxk/公需课答题.user.js
+//https://gitee.com/abc45628/userscript/raw/master/公需课答题.user.js
 (function () {
   'use strict';
   let timuTextOld = '';
